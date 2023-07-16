@@ -36,11 +36,10 @@ let createObj = ()=>{
     let objToSave={task:refinedTask,status:"todo",setalarm:setAlarm,refinedDate:refinedDate,refinedList:refinedList};
     // save in local storage
     localStorage.setItem(localStorage.length,JSON.stringify(objToSave));
-    task = null;
+    document.getElementById('task').value = null;
     setAlarm=false;
-    checkDate = null;
-    selectedList = null;
-    
+    document.getElementById("alarmDate").value = null;
+    document.querySelector('input[name="smartList"]').value = null;
     return objToSave;
 }
 
@@ -88,7 +87,10 @@ let createTaskdiv = (status,taskObj) =>{
     // pick data from local storage and put it in the card
     let child1 = createElem("div",null,["row","justifyBetween"]);
     let smartlistElem = createElem("p",taskObj.refinedList);
-    let alarmElem = createElem("p",taskObj.refinedDate);
+    let veiwDate = new Date(taskObj.refinedDate);
+    let months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","NOV","DEC"]
+    
+    let alarmElem = createElem("p",veiwDate.getDate() +" "+ months[veiwDate.getMonth()] + " at " + veiwDate.getHours()+":"+ veiwDate.getMinutes() );
     child1.appendChild(smartlistElem);
     child1.appendChild(alarmElem);
     
@@ -118,37 +120,49 @@ let createTaskdiv = (status,taskObj) =>{
 }
 
 function viewCards(status) {
-    //if localstorage.length is > 0
-    var totalTask = localstorage.length;
+    var totalTask = localStorage.length;
+    let todoTask = document.getElementsByClassName('todoTask')[0];
+    let doneTask = document.getElementsByClassName('doneTask')[0];
+    var noTodoTask = 0;
+    var noDoneTask = 0;
+    
     if (totalTask>0) {
         for (let i = 0; i < totalTask; i++) {
             // get the storage objects
             var getTask = localStorage.getItem(i);
             // Parse JSON string to object
             let taskObj = JSON.parse(getTask);          
-            let card = createTaskdiv(status,taskObj);
+            var card = createTaskdiv(status,taskObj);
+            if (status=="todo") {
+                // put all the cards in tododiv
+                todoTask.appendChild(card);       
+                noTodoTask++;
+            }else{
+                // put all the cards in donediv
+                doneTask.appendChild(card);
+                noDoneTask++;
+            }       
         }
-        if (status=="todo") {
-            // put all the cards in tododiv
-            let todoTask = document.getElementsByClassName('todoTask')[0];
-            todoTask.appendChild(card);       
-            let totalToDoTasks = document.getElementById('totalToDoTasks').innerHTML;
-            totalToDoTasks = totalTask;
-        }else{
-            // put all the cards in donediv
-            let doneTask = document.getElementsByClassName('doneTask')[0];
-            doneTask.appendChild(card);
-            let totalDoneTasks = document.getElementById('totalDoneTasks').innerHTML;
-            totalDoneTasks = totalTask;
-        }       
+    }
+    if(noTodoTask>0){
+        let totalToDoTasks = document.getElementById('totalToDoTasks');
+        totalToDoTasks.innerHTML = totalTask;
     }else{
-        console.log("No tasks to show");
+        var notice =createElem("p","No Task to show");
+        todoTask.appendChild(notice);
+    }
+    if(noDoneTask>0){
+        let totalDoneTasks = document.getElementById('totalDoneTasks');
+        totalDoneTasks.innerHTML = totalTask;
+    }else{
+        var notice =createElem("p","No Task to show");
+        doneTask.appendChild(notice);
     }
 }
-
 let createTask = () =>{
     let taskObj = createObj();
     let card = createTaskdiv("todo",taskObj);
     let todoTask = document.getElementsByClassName('todoTask')[0];
     todoTask.appendChild(card);
 }
+viewCards("todo");
