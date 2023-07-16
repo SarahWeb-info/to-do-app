@@ -1,0 +1,120 @@
+body{
+    font-size: 16px;
+    line-height: 1.8;
+    letter-spacing: normal;
+}
+body,h1,label,input{
+    box-sizing: border-box;
+    font-family: 'Pangolin', cursive;
+    position: relative;
+    color : #015c01;
+}
+h1{
+    text-align: center;
+}
+label,input,textarea{
+    font-size: 16px;
+    padding: 0.2vw;
+    margin: 0.5vh auto;
+}
+.p3{
+    padding: 3vw;
+   }
+.px2y1{
+    padding:1vh 2vw;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.justifyBetween{
+    justify-content: space-between;
+}
+
+.quarterDesktop{
+    width: 100vw;   
+    height: auto;
+}
+
+.btn{
+    border-radius: 100px;
+    box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+    color: gray;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.5vh 1vw;
+    margin: 0.5vh 0.2vw;
+    text-align: center;
+    text-decoration: none;
+    transition: all 250ms;
+    border: 0;
+    font-size: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;   
+}
+.btn:hover{
+    font-weight: bolder;
+    color: green;
+    transform: scaleY(1.2);
+    box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+}
+.hide{
+    display: none;
+}
+.card{
+    box-sizing: border-box;
+    width: 100%;
+    height: 40vh;
+    padding:1.5vh 1vw;
+    margin-right: 1vw;
+    margin-bottom: 1vw;
+    box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+    border-radius: 1.2vw;
+}
+.card:hover{
+    box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+}
+.todoTask,.doneTask{
+    display: block;
+}
+.todoTask p,.doneTask p{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#task{
+    width: 100%;
+    height: auto;
+}
+@media screen and (min-width: 765px) { 
+    .quarterDesktop{
+        width: 90vw;
+        margin: 0.5vh 5vw;   
+    }
+    .card{
+        width: 40vw;
+        height: 40vh;
+    }
+    .todoTask,.doneTask{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 2px;   
+    }
+}
+@media screen and (min-width: 1050px) { 
+    .card{
+        width: 25vw;
+    }
+    .todoTask,.doneTask{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media screen and (min-width: 1300px) { 
+    .card{
+        width: 18vw;
+    }
+    .todoTask,.doneTask{
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

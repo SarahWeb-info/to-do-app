@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="style.css">
+    <title>To Do App - SARAH WEB</title>
+</head>
+<h1>My To Do App</h1>
+<body class="quarterDesktop p3">
+    <h2>Add Task</h2>
+    <div class="px2y1">
+        <div>
+            <textarea name="task" id="task" required rows="3" placeholder="Enter task here..."></textarea>
+        </div>
+        <div>
+            <label for="alarm">Set Alarm</label>
+            <input type="checkbox" id="alarmSwitch" onclick="toggleHide(this)">
+            <input type="datetime-local" id="alarmDate" name="alarm" class="hide">
+
+        </div>
+        <div>
+            <label for="smartList">SmartList</label>
+            <input list="categories" name="smartList" minlength="2"  maxlength="10">
+            <datalist id="categories">
+                <option value="Urgent">
+                <option value="Birthdays">
+                <option value="Meeting">
+            </datalist>
+         </div>
+        <button class="btn" onclick="createTask()">Add Task</button>
+    </div>
+    <small>Only letters and numbers allowed</small>
+    <hr>
+    <div class="row justifyBetween">
+        <h2>To Do's</h2>
+        <em>Total task: <span id="totalToDoTasks">0</span></em>
+    </div>
+    <div class="todoTask px2y1">
+        <!-- Tasks will be added here -->
+        <!-- <div class="card">
+            <div class="row justifyBetween">
+                <p>smartlist</p>
+                <p>alarm</p>
+                <span class="row">
+                    <button class="btn"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    <button class="btn"><i class="fa-regular fa-trash-can"></i></button>
+                </span>
+            </div>
+            <p>Task</p>
+        </div> -->
+    </div>
+    <hr>
+    <div class="row justifyBetween">
+        <h2>Completed task</h2>
+        <em>Total task: <span id="totalDoneTasks">0</span></em>
+    </div>
+    <div class="doneTask px2y1">
+        <!-- <div class="card">
+            <div class="row justifyBetween">
+                <p>smartlist</p>
+                <p>alarm</p>
+                <span class="row">
+                    <button class="btn" ><i class="fa fa-repeat" aria-hidden="true"></i></button>
+                    <button class="btn"><i class="fa-regular fa-trash-can"></i></button>
+                </span>
+            </div>
+            <p>Task</p>
+        </div> -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
