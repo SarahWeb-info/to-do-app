@@ -1,62 +1,103 @@
+// frontend codes
+function setTodayDate() {
+    const now = new Date().toISOString().slice(0, 16);
+    let inputDate = document.getElementById("alarmDate");
+    inputDate.value = now;
+}
+setTodayDate();
+
 function toggleHide(e) {
     var showEle = e.nextElementSibling;
     showEle.classList.toggle("hide");
 }
+ 
+function stringDate(x) {
+    let d = new Date(x);
+    let months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","NOV","DEC"]
+    let stringDate = d.getDate() +" "+ months[d.getMonth()] + " at " + d.getHours()+":"+ d.getMinutes();
+    return stringDate;
+}
+// crud functions
+function modifyDate() {
+    let alarmSwitch = document.getElementById('alarmSwitch');
+    let setAlarm = (alarmSwitch.checked) ? true : false;  
 
-let createObj = ()=>{
-    // var specialChars = /[^a-zA-Z0-9 ]/g;
-    var task = document.getElementById('task').value;
-    var refinedTask = task.replace(/[^a-zA-Z0-9\s]/g, ' ');
+    let today =new Date();
+    today = Date.parse(today);
+    let inputDate = document.getElementById('alarmDate');
+    inputDate = Date.parse(inputDate.value);   
     
-    var checkDate = document.getElementById("alarmDate").value;
-    if (checkDate) {
-        var refinedDate = Date.parse(checkDate);
-        refinedDate =new Date(refinedDate);
-        var today =new Date();
-        var setAlarm = false;
-    
-        if (refinedDate.getTime() < today.getTime()) {
-            console.log('This date have passed, no alert is set');
-            setAlarm = false;
-            } else if (refinedDate.getTime() == today.getTime()) {
-            console.log('This date is current, no alert is set');
-            setAlarm = false;
+    let alarmNotice = document.getElementsByClassName('alarmNotice')[0];
+    if (setAlarm == true) {
+        let msg = "";
+        if (inputDate < today) {
+            setAlarm=false;
+            msg = 'No Alarm is set because the selected date have passed';
+        } else if (inputDate == today) {
+                setAlarm=false;
+            msg = 'This date is current, no alarm is set';    
         } else {
-            console.log('The alarm is set for ' + refinedDate);
-            setAlarm = true;
-        }          
+            setAlarm=true;
+            let read_date = stringDate(inputDate);
+            msg ='The alarm is set for ' + read_date; 
+        }
+        alarmNotice.innerHTML = msg;
     }else{
-        setAlarm=false;
-        refinedDate = null;
+        inputDate = today;
     }
-    
-    var selectedList = document.querySelector('input[name="smartList"]').value;
-    var refinedList = selectedList.replace(/[^a-zA-Z0-9]/g, '');    
-    
-    let objToSave={task:refinedTask,status:"todo",setalarm:setAlarm,refinedDate:refinedDate,refinedList:refinedList};
-    // save in local storage
-    localStorage.setItem(localStorage.length,JSON.stringify(objToSave));
-    document.getElementById('task').value = null;
-    setAlarm=false;
-    document.getElementById("alarmDate").value = null;
-    document.querySelector('input[name="smartList"]').value = null;
-    return objToSave;
+    alarmNotice.classList.remove("hide"); 
+    setTimeout(() => {
+        alarmNotice.classList.add("hide");
+    }, 2000);
+    return [setAlarm ,inputDate];
 }
 
-// create three event functions of card - delete , completed , refresh , edit
-function delBtn(){
-    console.log("del");
+let createObj = ()=>{
+    // get form values
+    let inputTask = document.getElementById('task').value;
+    let inputSmartList = document.getElementById('smartList').value;
+    
+    // modify task and smartlisk 
+    let task = inputTask.replace(/[^a-zA-Z0-9\s]/g, ' ');
+    let smartList = inputSmartList.replace(/[^a-zA-Z0-9]/g, '');    
+
+    //get and modify dates
+    let [setAlarm ,date] =  modifyDate();
+    // save the obj
+    let objToSave={task:task,status:"todo",setalarm:setAlarm,date:date,smartList:smartList};
+    // save in local storage
+    let key =  localStorage.length+1;
+    localStorage.setItem(key,JSON.stringify(objToSave));
+
+    // reset form
+    setTimeout(() => {
+        let form = document.getElementById('form');
+        form.reset();
+        setTodayDate();    
+        let alarmSwitch = document.getElementById('alarmSwitch');
+        alarmSwitch.checked = false;
+        alarmSwitch.nextElementSibling.classList.add('hide');
+    }, 2000); 
+
+    return [key,objToSave];
+}
+function delBtn(btn,key){
+    let getCard = btn.closest('.card');
+    console.log(getCard);
+    getCard.remove();
+    console.log(key);
+    localStorage.removeItem(key);
     // del the obj
     //call viewCard func
 }
-function doneBtn(){
-    console.log("done");
+function doneBtn(btn,key){
+    console.log(btn);
     // change the status of the object to done
     //call viewCard func
 
 }
-function undoBtn(){
-    console.log("undo");
+function undoBtn(btn,key){
+    console.log(btn);
     // change the status of the object to todo
     //call viewCard func
 
@@ -76,93 +117,93 @@ function createElem(elemtype,elemtext=null,elemclass=null,elemattr=null) {
     if (elemattr) {
         // set attr in loop object
         for (const key in elemattr) {
-            // console.log(key + "="+ obj[key]);
             elem.setAttribute(key,elemattr[key]);
           }      
     }
     return elem;
 }
 
-let createTaskdiv = (status,taskObj) =>{
-    // pick data from local storage and put it in the card
-    let child1 = createElem("div",null,["row","justifyBetween"]);
-    let smartlistElem = createElem("p",taskObj.refinedList);
-    let veiwDate = new Date(taskObj.refinedDate);
-    let months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","NOV","DEC"]
+let createTaskdiv = (key,taskObj) =>{
+    let status = taskObj.status;
+    let card = createElem("div",null,["card"]);
+    let subDiv1 = createElem("div",null,["row","justifyBetween"]);
+    let smartlistElem = createElem("p",taskObj.smartList);
+
+    let read_date = stringDate(taskObj.date);
+    if (taskObj.setalarm == true) {
+        var alarmElem = createElem("p",read_date,["alarmDisplay"] );
+    }else{
+        var alarmElem = createElem("p",read_date);
+    }    
+    subDiv1.appendChild(smartlistElem);
+    subDiv1.appendChild(alarmElem);
     
-    let alarmElem = createElem("p",veiwDate.getDate() +" "+ months[veiwDate.getMonth()] + " at " + veiwDate.getHours()+":"+ veiwDate.getMinutes() );
-    child1.appendChild(smartlistElem);
-    child1.appendChild(alarmElem);
-    
-    const delEvent = {onclick:"delBtn()"};
+    const delEvent = {onclick:"delBtn(this,"+key+")"};
     let delBtn = createElem("button","<i class='fa-regular fa-trash-can'></i>",["btn"],delEvent);
     let spanElem = createElem("span",null,["row"]);
     spanElem.appendChild(delBtn);
     
     if(status=="todo"){
-        const doneEvent = {onclick:"doneBtn()"};
+        const doneEvent = {onclick:"delBtn(this,"+key+")"};
         let checkBtn = createElem("button","<i class='fa fa-check' aria-hidden='true'></i>",["btn"],doneEvent);
         spanElem.appendChild(checkBtn);
     }else{
-        const undoEvent = {onclick:"undoBtn()"};
+        const undoEvent = {onclick:"delBtn(this,"+key+")"};
         let undoBtn = createElem("button","<i class='fa fa-check' aria-hidden='true'></i>",["btn"],undoEvent);
         spanElem.appendChild(undoBtn);
     }
 
-    child1.appendChild(spanElem);
+    subDiv1.appendChild(spanElem);
 
-    let card = createElem("div",null,["card"]);
-    card.appendChild(child1);
+    card.appendChild(subDiv1);
 
     let taskElem = createElem("p",taskObj.task);
     card.appendChild(taskElem);
     return card;
 }
-
-function viewCards(status) {
-    var totalTask = localStorage.length;
+function viewCards() {
+    // var totalTask = localStorage.length;
     let todoTask = document.getElementsByClassName('todoTask')[0];
     let doneTask = document.getElementsByClassName('doneTask')[0];
     var noTodoTask = 0;
     var noDoneTask = 0;
-    
-    if (totalTask>0) {
-        for (let i = 0; i < totalTask; i++) {
-            // get the storage objects
-            var getTask = localStorage.getItem(i);
-            // Parse JSON string to object
+
+    // run a loop for localStorage.lenght
+    for (let i = 1; i <= localStorage.length; i++) {
+            let getTask = localStorage.getItem(i);
             let taskObj = JSON.parse(getTask);          
-            var card = createTaskdiv(status,taskObj);
-            if (status=="todo") {
-                // put all the cards in tododiv
+            var card = createTaskdiv(i,taskObj);
+        
+            if (taskObj.status=="todo") {
                 todoTask.appendChild(card);       
                 noTodoTask++;
             }else{
-                // put all the cards in donediv
                 doneTask.appendChild(card);
                 noDoneTask++;
             }       
         }
+        if(noTodoTask>0){
+            let totalToDoTasks = document.getElementById('totalToDoTasks');
+            totalToDoTasks.innerHTML = noTodoTask;
+        }else{
+            var notice =createElem("p","No Task to show");
+            todoTask.appendChild(notice);
+        }
+        if(noDoneTask>0){
+            let totalDoneTasks = document.getElementById('totalDoneTasks');
+            totalDoneTasks.innerHTML = noDoneTask;
+        }else{
+            var notice =createElem("p","No Task to show");
+            doneTask.appendChild(notice);
+        }
     }
-    if(noTodoTask>0){
-        let totalToDoTasks = document.getElementById('totalToDoTasks');
-        totalToDoTasks.innerHTML = totalTask;
-    }else{
-        var notice =createElem("p","No Task to show");
-        todoTask.appendChild(notice);
-    }
-    if(noDoneTask>0){
-        let totalDoneTasks = document.getElementById('totalDoneTasks');
-        totalDoneTasks.innerHTML = totalTask;
-    }else{
-        var notice =createElem("p","No Task to show");
-        doneTask.appendChild(notice);
-    }
-}
-let createTask = () =>{
-    let taskObj = createObj();
-    let card = createTaskdiv("todo",taskObj);
+
+document.getElementById('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let [key,taskObj] = createObj();
+    let card = createTaskdiv(key,taskObj);
     let todoTask = document.getElementsByClassName('todoTask')[0];
     todoTask.appendChild(card);
-}
-viewCards("todo");
+    viewCards();
+});
+viewCards();

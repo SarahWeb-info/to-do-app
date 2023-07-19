@@ -28,6 +28,7 @@ label,input,textarea{
     flex-direction: row;
     align-items: center;
 }
+
 .justifyBetween{
     justify-content: space-between;
 }
@@ -62,6 +63,11 @@ label,input,textarea{
 }
 .hide{
     display: none;
+}
+.alarmNotice {
+    color : red;
+    font-size: 0.8rem;
+    transition: 0.1s;
 }
 .card{
     box-sizing: border-box;

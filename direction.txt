@@ -139,3 +139,14 @@
 // }    
 </script>
 </html>
+
+To do App Featues:
+Create Object->
+    createTask()
+    createTaskDiv()
+Veiw Object->
+Delete Object->
+    delete div
+    delete object
+    reset keys numbers
+Update Object_>

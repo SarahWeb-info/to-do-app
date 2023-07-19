@@ -13,28 +13,27 @@
 <h1>My To Do App</h1>
 <body class="quarterDesktop p3">
     <h2>Add Task</h2>
-    <div class="px2y1">
+    <form class="px2y1" id="form">
         <div>
             <textarea name="task" id="task" required rows="3" placeholder="Enter task here..."></textarea>
         </div>
-        <div>
+        <div class = "">
             <label for="alarm">Set Alarm</label>
-            <input type="checkbox" id="alarmSwitch" onclick="toggleHide(this)">
-            <input type="datetime-local" id="alarmDate" name="alarm" class="hide">
-
+            <input type="checkbox" id="alarmSwitch"  onclick="toggleHide(this)">
+            <input type="datetime-local" id="alarmDate" name="alarm" class="hide" onchange="modifyDate(this)">
+            <span class="hide alarmNotice">No Alarm is Set</span>    
         </div>
         <div>
             <label for="smartList">SmartList</label>
-            <input list="categories" name="smartList" minlength="2"  maxlength="10">
+            <input list="categories" name="smartList" id="smartList" minlength="2"  maxlength="10">
             <datalist id="categories">
                 <option value="Urgent">
-                <option value="Birthdays">
-                <option value="Meeting">
-            </datalist>
-         </div>
-        <button class="btn" onclick="createTask()">Add Task</button>
-    </div>
-    <small>Only letters and numbers allowed</small>
+                    <option value="Birthdays">
+                        <option value="Meeting">
+                        </datalist>
+           </div>
+            <button class="btn" type="submit">Submit</button>
+         </form>
     <hr>
     <div class="row justifyBetween">
         <h2>To Do's</h2>
