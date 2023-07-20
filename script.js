@@ -113,14 +113,7 @@ function doneBtn(key){
     localStorage.setItem(key,JSON.stringify(obj));
     viewCards();
 }
-function edit(key){
-    console.log('edit');
-    // let strObj = localStorage.getItem(key);
-    // let obj = JSON.parse(strObj);
-    // obj.status = "todo";
-    // localStorage.setItem(key,JSON.stringify(obj));
-    // viewCards();
-}
+
 function undoBtn(key){
      let strObj = localStorage.getItem(key);
      let obj = JSON.parse(strObj);
